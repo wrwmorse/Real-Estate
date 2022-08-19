@@ -1,0 +1,82 @@
+import numpy as np
+import pandas as pd
+import scipy as sy
+from scipy import stats
+import random as rnd
+import seaborn as sns
+from sklearn import datasets, linear_model
+from sklearn import preprocessing
+from sklearn.model_selection import train_test_split
+from sklearn.feature_selection import RFE
+import matplotlib.pyplot as plt
+
+path = "C:/Users/richw/Desktop/"
+file = path+'Denver CO.csv'
+
+df = pd.read_csv(file)
+
+df
+
+df.shape
+
+df.head(n=2)
+
+description = df.describe()
+
+print(description)
+
+plt.figure(figsize = (10,5))
+df['Price'].plot(kind="hist")
+
+df.dtypes
+
+df=df.drop(["Address","No."], axis =1)
+
+
+x = df.drop("Price",1)
+y = df["Price"]
+x.head (n=2)
+
+plt.figure(figsize=(9,8))
+cor =df.corr()
+sns.heatmap(cor,annot=True,cmap=plt.cm.RdYlBu)
+plt.show
+
+target_corr = abs(cor["Price"])
+positive_corr_target = target_corr[target_corr>(.5)]
+positive_corr_target
+
+print(df[["Baths","Bedrooms","Sq Foot","Middle School Rating","Garage (Number of cars)","Age", "Year built"]].corr())
+
+
+df=df.drop(["Pools","Age","Elementary School Rating","Acres","High School Rating"],axis = 1)
+df
+
+x_train, x_test, y_train, y_test = train_test_split(df, y, test_size =0.25)
+print(x_train.shape, y_train.shape)
+print(x_test.shape, y_test.shape)
+
+lrm = linear_model.LinearRegression()
+lrm_model = lrm.fit(x_train,y_train)
+lrm_predictions = lrm.predict(x_test)
+
+lrm_predictions[0:10]
+
+plt.scatter(y_test,lrm_predictions)
+plt.title("Plot of Predicted vs Actual Values")
+plt.xlabel ("actual value")
+plt.ylabel ("predicted value")
+
+print ('Score:',lrm_model.score(x_test,y_test))
+
+print (predictions)
+type (predictions)
+
+
+df2 = pd.DataFrame(x_test)
+df2['Price Actuals'] = y_test
+df2['Price Predictions'] = predictions
+df2.head(n=2)
+
+
+
